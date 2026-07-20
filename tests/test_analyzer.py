@@ -1,5 +1,8 @@
-from app.analyzer import find_matching_skills
-from app.analyzer import calculate_match_score, find_matching_skills
+from app.analyzer import (
+    calculate_match_score,
+    contains_skill,
+    find_matching_skills,
+)
 
 def test_find_matching_skills_returns_matched_and_missing_skills() -> None:
     job_description = """
@@ -147,3 +150,44 @@ def test_calculate_match_score_rounds_to_two_decimal_places() -> None:
     result = calculate_match_score(matched_skills, missing_skills)
 
     assert result == 66.67
+
+def test_find_matching_skills_does_not_match_java_inside_javascript() -> None:
+    job_description = "Java developer required."
+    resume = "Experienced JavaScript developer."
+    known_skills = ["Java", "JavaScript"]
+
+    matched_skills, missing_skills = find_matching_skills(
+        job_description,
+        resume,
+        known_skills,
+    )
+
+    assert matched_skills == []
+    assert missing_skills == ["Java"]
+
+
+def test_contains_skill_matches_complete_skill_name() -> None:
+    result = contains_skill(
+        "The candidate has strong Python experience.",
+        "Python",
+    )
+
+    assert result is True
+
+
+def test_contains_skill_is_case_insensitive() -> None:
+    result = contains_skill(
+        "The candidate has PYTHON experience.",
+        "python",
+    )
+
+    assert result is True
+
+
+def test_contains_skill_does_not_match_partial_word() -> None:
+    result = contains_skill(
+        "The candidate has JavaScript experience.",
+        "Java",
+    )
+
+    assert result is False

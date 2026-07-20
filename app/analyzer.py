@@ -1,30 +1,14 @@
-def find_matching_skills(
-    job_description: str,
-    resume: str,
-    skills: list[str],
-) -> tuple[list[str], list[str]]:
-    job_description_lower = job_description.lower()
-    resume_lower = resume.lower()
+import re
 
-    required_skills = [
-        skill
-        for skill in skills
-        if skill.lower() in job_description_lower
-    ]
 
-    matched_skills = [
-        skill
-        for skill in required_skills
-        if skill.lower() in resume_lower
-    ]
+def contains_skill(text: str, skill: str) -> bool:
+    pattern = rf"\b{re.escape(skill)}\b"
 
-    missing_skills = [
-        skill
-        for skill in required_skills
-        if skill.lower() not in resume_lower
-    ]
-
-    return matched_skills, missing_skills
+    return re.search(
+        pattern,
+        text,
+        flags=re.IGNORECASE,
+    ) is not None
 
 def calculate_match_score(
     matched_skills: list[str],
@@ -38,3 +22,28 @@ def calculate_match_score(
     score = len(matched_skills) / total_required_skills * 100
 
     return round(score, 2)
+
+def find_matching_skills(
+    job_description: str,
+    resume: str,
+    skills: list[str],
+) -> tuple[list[str], list[str]]:
+    required_skills = [
+        skill
+        for skill in skills
+        if contains_skill(job_description, skill)
+    ]
+
+    matched_skills = [
+        skill
+        for skill in required_skills
+        if contains_skill(resume, skill)
+    ]
+
+    missing_skills = [
+        skill
+        for skill in required_skills
+        if not contains_skill(resume, skill)
+    ]
+
+    return matched_skills, missing_skills
