@@ -1,0 +1,13 @@
+Software Engineer
+
+Responsibilities:
+- Develop backend services
+- Write Python code
+- Build REST APIs
+- Work with databases
+
+Requirements:
+- Python
+- SQL
+- Git
+- Docker
