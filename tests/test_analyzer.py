@@ -1,0 +1,149 @@
+from app.analyzer import find_matching_skills
+from app.analyzer import calculate_match_score, find_matching_skills
+
+def test_find_matching_skills_returns_matched_and_missing_skills() -> None:
+    job_description = """
+    Requirements:
+    - Python
+    - SQL
+    - Git
+    - Docker
+    """
+
+    resume = """
+    Skills:
+    - Python
+    - SQL
+    - Git
+    """
+
+    known_skills = [
+        "Python",
+        "SQL",
+        "Git",
+        "Docker",
+        "React",
+    ]
+
+    matched_skills, missing_skills = find_matching_skills(
+        job_description,
+        resume,
+        known_skills,
+    )
+
+    assert matched_skills == ["Python", "SQL", "Git"]
+    assert missing_skills == ["Docker"]
+
+
+def test_find_matching_skills_is_case_insensitive() -> None:
+    job_description = "python sql docker"
+    resume = "PYTHON Sql"
+    known_skills = ["Python", "SQL", "Docker"]
+
+    matched_skills, missing_skills = find_matching_skills(
+        job_description,
+        resume,
+        known_skills,
+    )
+
+    assert matched_skills == ["Python", "SQL"]
+    assert missing_skills == ["Docker"]
+
+
+def test_find_matching_skills_returns_empty_lists_when_jd_has_no_known_skills(
+) -> None:
+    job_description = "Excellent communication and teamwork required."
+    resume = "Experienced software developer."
+    known_skills = ["Python", "SQL", "Docker"]
+
+    matched_skills, missing_skills = find_matching_skills(
+        job_description,
+        resume,
+        known_skills,
+    )
+
+    assert matched_skills == []
+    assert missing_skills == []
+
+
+def test_find_matching_skills_returns_no_missing_skills_when_all_match(
+) -> None:
+    job_description = "Python SQL Git"
+    resume = "Python SQL Git Docker"
+    known_skills = ["Python", "SQL", "Git", "Docker"]
+
+    matched_skills, missing_skills = find_matching_skills(
+        job_description,
+        resume,
+        known_skills,
+    )
+
+    assert matched_skills == ["Python", "SQL", "Git"]
+    assert missing_skills == []
+
+
+def test_find_matching_skills_returns_all_required_skills_as_missing(
+) -> None:
+    job_description = "Python SQL Docker"
+    resume = "React TypeScript"
+    known_skills = [
+        "Python",
+        "SQL",
+        "Docker",
+        "React",
+        "TypeScript",
+    ]
+
+    matched_skills, missing_skills = find_matching_skills(
+        job_description,
+        resume,
+        known_skills,
+    )
+
+    assert matched_skills == []
+    assert missing_skills == ["Python", "SQL", "Docker"]
+
+def test_calculate_match_score_returns_correct_percentage() -> None:
+    matched_skills = ["Python", "SQL", "Git"]
+    missing_skills = ["Docker"]
+
+    result = calculate_match_score(matched_skills, missing_skills)
+
+    assert result == 75.0
+
+
+def test_calculate_match_score_returns_100_when_all_skills_match() -> None:
+    matched_skills = ["Python", "SQL", "Git"]
+    missing_skills: list[str] = []
+
+    result = calculate_match_score(matched_skills, missing_skills)
+
+    assert result == 100.0
+
+
+def test_calculate_match_score_returns_zero_when_no_skills_match() -> None:
+    matched_skills: list[str] = []
+    missing_skills = ["Python", "SQL", "Docker"]
+
+    result = calculate_match_score(matched_skills, missing_skills)
+
+    assert result == 0.0
+
+
+def test_calculate_match_score_returns_zero_when_no_required_skills_exist(
+) -> None:
+    matched_skills: list[str] = []
+    missing_skills: list[str] = []
+
+    result = calculate_match_score(matched_skills, missing_skills)
+
+    assert result == 0.0
+
+
+def test_calculate_match_score_rounds_to_two_decimal_places() -> None:
+    matched_skills = ["Python", "SQL"]
+    missing_skills = ["Docker"]
+
+    result = calculate_match_score(matched_skills, missing_skills)
+
+    assert result == 66.67

@@ -1,36 +1,75 @@
 from pathlib import Path
 
-from app.loaders import load_job_description
-
+from app.analyzer import find_matching_skills
+from app.loaders import load_text_file
+from app.analyzer import calculate_match_score, find_matching_skills
 
 def print_banner() -> None:
-    """Display the application banner."""
-
-    print("=" * 60)
+    print("=" * 50)
     print("Job Match Analyzer")
-    print("AI-powered Career Matching System")
-    print("=" * 60)
+    print("AI-powered career matching system")
+    print("=" * 50)
 
 
 def main() -> None:
     print_banner()
 
-    path_input = input(
-        "Enter the path to the job description file:\n> "
-    ).strip()
+    job_description_path_input = input(
+        "Enter the path to the job description file: "
+    )
+    resume_path_input = input(
+        "Enter the path to the resume file: "
+    )
 
-    jd_path = Path(path_input)
+    job_description_path = Path(job_description_path_input)
+    resume_path = Path(resume_path_input)
 
     try:
-        job_description = load_job_description(jd_path)
+        job_description = load_text_file(job_description_path)
+        resume = load_text_file(resume_path)
     except (FileNotFoundError, ValueError) as error:
-        print(f"\nError: {error}")
+        print(f"Error: {error}")
         return
 
     print("\nJob description loaded successfully.")
-    print("-" * 60)
-    print(job_description)
-    print("-" * 60)
+    print("Resume loaded successfully.")
+
+    known_skills = [
+        "Python",
+        "SQL",
+        "Git",
+        "Docker",
+        "React",
+        "TypeScript",
+        "FastAPI",
+        "PostgreSQL",
+        "AWS",
+    ]
+
+    matched_skills, missing_skills = find_matching_skills(
+        job_description,
+        resume,
+        known_skills,
+    )
+    match_score = calculate_match_score(
+        matched_skills,
+        missing_skills,
+    )
+    
+    print(f"\nMatch score: {match_score}%")
+    print("\nMatching skills:")
+    if matched_skills:
+        for skill in matched_skills:
+            print(f"- {skill}")
+    else:
+        print("- None")
+
+    print("\nMissing skills:")
+    if missing_skills:
+        for skill in missing_skills:
+            print(f"- {skill}")
+    else:
+        print("- None")
 
 
 if __name__ == "__main__":
