@@ -1,0 +1,15 @@
+Cassie Huang
+
+Summary:
+Full-stack developer transitioning into AI engineering.
+
+Skills:
+- Python
+- TypeScript
+- React
+- Git
+- SQL
+
+Experience:
+- Built web applications
+- Worked on software product development
