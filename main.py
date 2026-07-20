@@ -1,23 +1,36 @@
 from pathlib import Path
 
-
-def load_job_description(path: Path) -> str:
-    """Read a job description from a text file."""
-
-    with open(path, "r", encoding="utf-8") as file:
-        return file.read()
+from app.loaders import load_job_description
 
 
-def main():
-    print("=" * 50)
+def print_banner() -> None:
+    """Display the application banner."""
+
+    print("=" * 60)
     print("Job Match Analyzer")
-    print("=" * 50)
+    print("AI-powered Career Matching System")
+    print("=" * 60)
 
-    jd_path = Path("data/jd/software_engineer.txt")
 
-    job_description = load_job_description(jd_path)
+def main() -> None:
+    print_banner()
 
+    path_input = input(
+        "Enter the path to the job description file:\n> "
+    ).strip()
+
+    jd_path = Path(path_input)
+
+    try:
+        job_description = load_job_description(jd_path)
+    except (FileNotFoundError, ValueError) as error:
+        print(f"\nError: {error}")
+        return
+
+    print("\nJob description loaded successfully.")
+    print("-" * 60)
     print(job_description)
+    print("-" * 60)
 
 
 if __name__ == "__main__":
