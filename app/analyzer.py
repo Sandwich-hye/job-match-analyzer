@@ -2,6 +2,7 @@ import re
 
 from collections.abc import Sequence
 from app.models import MatchResult, MatchStatus, RequirementMatch
+from app.scoring import calculate_requirement_score
 
 def contains_skill(text: str, skill: str) -> bool:
     escaped_skill = re.escape(skill)
@@ -72,9 +73,8 @@ def analyse_job_match(
         skills,
     )
 
-    match_score = calculate_match_score(
-        matched_skills,
-        missing_skills,
+    match_score = calculate_requirement_score(
+        requirement_matches,
     )
 
     return MatchResult(
