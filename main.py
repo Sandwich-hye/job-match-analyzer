@@ -1,5 +1,5 @@
 from pathlib import Path
-
+from app.skills import KNOWN_SKILLS
 from app.analyzer import analyse_job_match
 from app.loaders import load_text_file
 
@@ -33,22 +33,10 @@ def main() -> None:
     print("\nJob description loaded successfully.")
     print("Resume loaded successfully.")
 
-    known_skills = [
-        "Python",
-        "SQL",
-        "Git",
-        "Docker",
-        "React",
-        "TypeScript",
-        "FastAPI",
-        "PostgreSQL",
-        "AWS",
-    ]
-
     result = analyse_job_match(
         job_description,
         resume,
-        known_skills,
+        KNOWN_SKILLS,
     )
 
     print(f"\nMatch score: {result.match_score}%")

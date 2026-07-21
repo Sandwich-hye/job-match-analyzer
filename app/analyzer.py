@@ -1,7 +1,7 @@
 import re
 
 from app.models import MatchResult
-
+from collections.abc import Sequence
 
 def contains_skill(text: str, skill: str) -> bool:
     escaped_skill = re.escape(skill)
@@ -32,7 +32,7 @@ def calculate_match_score(
 def find_matching_skills(
     job_description: str,
     resume: str,
-    skills: list[str],
+    skills: Sequence[str]
 ) -> tuple[list[str], list[str]]:
     required_skills = [
         skill
@@ -58,7 +58,7 @@ def find_matching_skills(
 def analyse_job_match(
     job_description: str,
     resume: str,
-    skills: list[str],
+    skills: Sequence[str],
 ) -> MatchResult:
     matched_skills, missing_skills = find_matching_skills(
         job_description,
