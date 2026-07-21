@@ -1,7 +1,12 @@
 import re
 
 from collections.abc import Sequence
-from app.models import MatchResult, MatchStatus, RequirementMatch
+from app.models import (
+    MatchResult,
+    MatchStatus,
+    RequirementCategory,
+    RequirementMatch,
+)
 from app.scoring import calculate_requirement_score
 
 def contains_skill(text: str, skill: str) -> bool:
@@ -93,6 +98,7 @@ def build_requirement_matches(
         requirement_matches.append(
             RequirementMatch(
                 requirement=skill,
+                category=RequirementCategory.CORE_SKILL,
                 status=(
                     MatchStatus.MATCHED
                     if candidate_evidence is not None

@@ -10,8 +10,17 @@ class MatchStatus(StrEnum):
     NOT_ENOUGH_INFORMATION = "not_enough_information"
 
 
+class RequirementCategory(StrEnum):
+    CORE_SKILL = "core_skill"
+    EXPERIENCE = "experience"
+    RESPONSIBILITY = "responsibility"
+    BONUS = "bonus"
+    FEASIBILITY = "feasibility"
+
+
 class RequirementMatch(BaseModel):
     requirement: str
+    category: RequirementCategory
     status: MatchStatus
     job_evidence: str
     candidate_evidence: str | None = None

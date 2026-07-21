@@ -1,4 +1,8 @@
-from app.models import MatchStatus, RequirementMatch
+from app.models import (
+    MatchStatus,
+    RequirementCategory,
+    RequirementMatch,
+)
 from app.scoring import calculate_requirement_score
 
 
@@ -8,10 +12,10 @@ def create_requirement_match(
 ) -> RequirementMatch:
     return RequirementMatch(
         requirement=requirement,
+        category=RequirementCategory.CORE_SKILL,
         status=status,
         job_evidence=f"- {requirement}",
     )
-
 
 def test_calculate_requirement_score_returns_correct_score() -> None:
     requirement_matches = [

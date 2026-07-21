@@ -11,6 +11,7 @@
   "requirement_matches": [
     {
       "requirement": "Python",
+      "category": "core_skill",
       "status": "matched",
       "job_evidence": "- Write Python code",
       "candidate_evidence": "- Python",
@@ -18,6 +19,7 @@
     },
     {
       "requirement": "SQL",
+      "category": "core_skill",
       "status": "matched",
       "job_evidence": "- SQL",
       "candidate_evidence": "- SQL",
@@ -25,6 +27,7 @@
     },
     {
       "requirement": "Git",
+      "category": "core_skill",
       "status": "matched",
       "job_evidence": "- Git",
       "candidate_evidence": "- Git",
@@ -32,6 +35,7 @@
     },
     {
       "requirement": "Docker",
+      "category": "core_skill",
       "status": "not_enough_information",
       "job_evidence": "- Docker",
       "candidate_evidence": null,
