@@ -95,22 +95,33 @@ def build_requirement_matches(
         if not contains_skill(job_description, skill):
             continue
 
-        has_resume_evidence = contains_skill(resume, skill)
+        candidate_evidence = extract_skill_evidence(
+            resume,
+            skill,
+        )
 
         requirement_matches.append(
             RequirementMatch(
                 requirement=skill,
                 status=(
                     MatchStatus.MATCHED
-                    if has_resume_evidence
+                    if candidate_evidence is not None
                     else MatchStatus.NOT_ENOUGH_INFORMATION
                 ),
-                candidate_evidence=(
-                    skill
-                    if has_resume_evidence
-                    else None
-                ),
+                candidate_evidence=candidate_evidence,
             )
         )
 
     return requirement_matches
+
+def extract_skill_evidence(
+    text: str,
+    skill: str,
+) -> str | None:
+    for raw_line in text.splitlines():
+        line = raw_line.strip()
+
+        if line and contains_skill(line, skill):
+            return line
+
+    return None

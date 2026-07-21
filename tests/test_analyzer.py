@@ -3,6 +3,7 @@ from app.analyzer import (
     build_requirement_matches,
     calculate_match_score,
     contains_skill,
+    extract_skill_evidence,
     find_matching_skills,
 )
 from app.models import MatchStatus
@@ -272,8 +273,9 @@ def test_build_requirement_matches_returns_status_for_each_required_skill(
 
     assert result[0].requirement == "Python"
     assert result[0].status == MatchStatus.MATCHED
-    assert result[0].candidate_evidence == "Python"
-
+    assert result[0].candidate_evidence == (
+        "Experienced Python developer."
+    )
     assert result[1].requirement == "Docker"
     assert result[1].status == MatchStatus.NOT_ENOUGH_INFORMATION
     assert result[1].candidate_evidence is None
@@ -299,3 +301,46 @@ def test_build_requirement_matches_ignores_skills_not_required_by_job(
         requirement_match.requirement
         for requirement_match in result
     ] == ["Python"]
+
+def test_extract_skill_evidence_returns_matching_line() -> None:
+    resume = """
+    Skills:
+    - Python
+    - SQL
+    """
+
+    result = extract_skill_evidence(
+        resume,
+        "Python",
+    )
+
+    assert result == "- Python"
+
+
+def test_extract_skill_evidence_is_case_insensitive() -> None:
+    resume = """
+    Experience:
+    Built backend services using PYTHON and FastAPI.
+    """
+
+    result = extract_skill_evidence(
+        resume,
+        "python",
+    )
+
+    assert result == "Built backend services using PYTHON and FastAPI."
+
+
+def test_extract_skill_evidence_returns_none_when_not_found() -> None:
+    resume = """
+    Skills:
+    - React
+    - TypeScript
+    """
+
+    result = extract_skill_evidence(
+        resume,
+        "Docker",
+    )
+
+    assert result is None

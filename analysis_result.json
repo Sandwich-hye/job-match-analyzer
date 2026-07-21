@@ -12,19 +12,19 @@
     {
       "requirement": "Python",
       "status": "matched",
-      "candidate_evidence": "Python",
+      "candidate_evidence": "- Python",
       "is_application_blocker": false
     },
     {
       "requirement": "SQL",
       "status": "matched",
-      "candidate_evidence": "SQL",
+      "candidate_evidence": "- SQL",
       "is_application_blocker": false
     },
     {
       "requirement": "Git",
       "status": "matched",
-      "candidate_evidence": "Git",
+      "candidate_evidence": "- Git",
       "is_application_blocker": false
     },
     {
