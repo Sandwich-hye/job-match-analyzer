@@ -1,8 +1,11 @@
 import pytest
 from pydantic import ValidationError
 
-from app.models import MatchResult
-
+from app.models import (
+    MatchResult,
+    MatchStatus,
+    RequirementMatch,
+)
 
 def test_match_result_accepts_valid_data() -> None:
     result = MatchResult(
@@ -31,4 +34,37 @@ def test_match_result_rejects_score_above_100() -> None:
             matched_skills=["Python"],
             missing_skills=[],
             match_score=101,
+        )
+
+def test_requirement_match_accepts_valid_data() -> None:
+    result = RequirementMatch(
+        requirement="Python",
+        status=MatchStatus.MATCHED,
+        candidate_evidence="Python listed in the Skills section.",
+        is_application_blocker=False,
+    )
+
+    assert result.requirement == "Python"
+    assert result.status == MatchStatus.MATCHED
+    assert result.candidate_evidence == (
+        "Python listed in the Skills section."
+    )
+    assert result.is_application_blocker is False
+
+
+def test_requirement_match_allows_missing_evidence() -> None:
+    result = RequirementMatch(
+        requirement="Docker",
+        status=MatchStatus.NOT_ENOUGH_INFORMATION,
+    )
+
+    assert result.candidate_evidence is None
+    assert result.is_application_blocker is False
+
+
+def test_requirement_match_rejects_invalid_status() -> None:
+    with pytest.raises(ValidationError):
+        RequirementMatch(
+            requirement="Python",
+            status="complete_match",
         )
