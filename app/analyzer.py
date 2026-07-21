@@ -92,7 +92,12 @@ def build_requirement_matches(
     requirement_matches: list[RequirementMatch] = []
 
     for skill in skills:
-        if not contains_skill(job_description, skill):
+        job_evidence = extract_skill_evidence(
+            job_description,
+            skill,
+        )
+
+        if job_evidence is None:
             continue
 
         candidate_evidence = extract_skill_evidence(
@@ -108,6 +113,7 @@ def build_requirement_matches(
                     if candidate_evidence is not None
                     else MatchStatus.NOT_ENOUGH_INFORMATION
                 ),
+                job_evidence=job_evidence,
                 candidate_evidence=candidate_evidence,
             )
         )

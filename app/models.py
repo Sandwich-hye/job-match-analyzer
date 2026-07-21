@@ -13,6 +13,7 @@ class MatchStatus(StrEnum):
 class RequirementMatch(BaseModel):
     requirement: str
     status: MatchStatus
+    job_evidence: str
     candidate_evidence: str | None = None
     is_application_blocker: bool = False
 

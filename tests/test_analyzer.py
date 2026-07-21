@@ -279,7 +279,9 @@ def test_build_requirement_matches_returns_status_for_each_required_skill(
     assert result[1].requirement == "Docker"
     assert result[1].status == MatchStatus.NOT_ENOUGH_INFORMATION
     assert result[1].candidate_evidence is None
-
+    assert result[0].job_evidence == (
+        "Python and Docker are required."
+    )
 
 def test_build_requirement_matches_ignores_skills_not_required_by_job(
 ) -> None:

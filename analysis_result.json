@@ -12,24 +12,28 @@
     {
       "requirement": "Python",
       "status": "matched",
+      "job_evidence": "- Write Python code",
       "candidate_evidence": "- Python",
       "is_application_blocker": false
     },
     {
       "requirement": "SQL",
       "status": "matched",
+      "job_evidence": "- SQL",
       "candidate_evidence": "- SQL",
       "is_application_blocker": false
     },
     {
       "requirement": "Git",
       "status": "matched",
+      "job_evidence": "- Git",
       "candidate_evidence": "- Git",
       "is_application_blocker": false
     },
     {
       "requirement": "Docker",
       "status": "not_enough_information",
+      "job_evidence": "- Docker",
       "candidate_evidence": null,
       "is_application_blocker": false
     }
