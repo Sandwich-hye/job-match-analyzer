@@ -1,7 +1,43 @@
+import argparse
+
 from pathlib import Path
 from app.skills import KNOWN_SKILLS
 from app.analyzer import analyse_job_match
 from app.loaders import load_text_file
+
+BASE_DIR = Path(__file__).resolve().parent
+
+DEFAULT_JOB_DESCRIPTION_PATH = (
+    BASE_DIR / "data" / "jd" / "software_engineer.txt"
+)
+
+DEFAULT_RESUME_PATH = (
+    BASE_DIR / "data" / "resume" / "sample_resume.txt"
+)
+
+def parse_arguments() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description=(
+            "Compare a job description with a resume "
+            "and generate a structured match analysis."
+        )
+    )
+
+    parser.add_argument(
+        "--job-description",
+        type=Path,
+        default=DEFAULT_JOB_DESCRIPTION_PATH,
+        help="Path to the job description text file.",
+    )
+
+    parser.add_argument(
+        "--resume",
+        type=Path,
+        default=DEFAULT_RESUME_PATH,
+        help="Path to the resume text file.",
+    )
+
+    return parser.parse_args()
 
 def print_banner() -> None:
     print("=" * 50)
@@ -13,15 +49,13 @@ def print_banner() -> None:
 def main() -> None:
     print_banner()
 
-    job_description_path_input = input(
-        "Enter the path to the job description file: "
-    )
-    resume_path_input = input(
-        "Enter the path to the resume file: "
-    )
+    arguments = parse_arguments()
 
-    job_description_path = Path(job_description_path_input)
-    resume_path = Path(resume_path_input)
+    job_description_path = arguments.job_description
+    resume_path = arguments.resume
+
+    print(f"\nJob description: {job_description_path}")
+    print(f"Resume: {resume_path}")
 
     try:
         job_description = load_text_file(job_description_path)
