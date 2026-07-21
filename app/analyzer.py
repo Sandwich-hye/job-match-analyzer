@@ -15,21 +15,6 @@ def contains_skill(text: str, skill: str) -> bool:
         flags=re.IGNORECASE,
     ) is not None
 
-
-def calculate_match_score(
-    matched_skills: list[str],
-    missing_skills: list[str],
-) -> float:
-    total_required_skills = len(matched_skills) + len(missing_skills)
-
-    if total_required_skills == 0:
-        return 0.0
-
-    score = len(matched_skills) / total_required_skills * 100
-
-    return round(score, 2)
-
-
 def find_matching_skills(
     job_description: str,
     resume: str,

@@ -1,7 +1,6 @@
 from app.analyzer import (
     analyse_job_match,
     build_requirement_matches,
-    calculate_match_score,
     contains_skill,
     extract_skill_evidence,
     find_matching_skills,
@@ -109,51 +108,6 @@ def test_find_matching_skills_returns_all_required_skills_as_missing(
 
     assert matched_skills == []
     assert missing_skills == ["Python", "SQL", "Docker"]
-
-def test_calculate_match_score_returns_correct_percentage() -> None:
-    matched_skills = ["Python", "SQL", "Git"]
-    missing_skills = ["Docker"]
-
-    result = calculate_match_score(matched_skills, missing_skills)
-
-    assert result == 75.0
-
-
-def test_calculate_match_score_returns_100_when_all_skills_match() -> None:
-    matched_skills = ["Python", "SQL", "Git"]
-    missing_skills: list[str] = []
-
-    result = calculate_match_score(matched_skills, missing_skills)
-
-    assert result == 100.0
-
-
-def test_calculate_match_score_returns_zero_when_no_skills_match() -> None:
-    matched_skills: list[str] = []
-    missing_skills = ["Python", "SQL", "Docker"]
-
-    result = calculate_match_score(matched_skills, missing_skills)
-
-    assert result == 0.0
-
-
-def test_calculate_match_score_returns_zero_when_no_required_skills_exist(
-) -> None:
-    matched_skills: list[str] = []
-    missing_skills: list[str] = []
-
-    result = calculate_match_score(matched_skills, missing_skills)
-
-    assert result == 0.0
-
-
-def test_calculate_match_score_rounds_to_two_decimal_places() -> None:
-    matched_skills = ["Python", "SQL"]
-    missing_skills = ["Docker"]
-
-    result = calculate_match_score(matched_skills, missing_skills)
-
-    assert result == 66.67
 
 def test_find_matching_skills_does_not_match_java_inside_javascript() -> None:
     job_description = "Java developer required."
