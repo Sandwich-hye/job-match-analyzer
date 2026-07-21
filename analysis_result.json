@@ -1,0 +1,11 @@
+{
+  "matched_skills": [
+    "Python",
+    "SQL",
+    "Git"
+  ],
+  "missing_skills": [
+    "Docker"
+  ],
+  "match_score": 75.0
+}

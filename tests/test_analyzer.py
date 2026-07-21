@@ -1,4 +1,5 @@
 from app.analyzer import (
+    analyse_job_match,
     calculate_match_score,
     contains_skill,
     find_matching_skills,
@@ -191,3 +192,39 @@ def test_contains_skill_does_not_match_partial_word() -> None:
     )
 
     assert result is False
+
+def test_contains_skill_matches_c_plus_plus() -> None:
+    assert contains_skill(
+        "Experience with C++ development.",
+        "C++",
+    ) is True
+
+def test_contains_skill_does_not_match_c_plus_plus_inside_longer_text() -> None:
+    assert contains_skill(
+        "Experience with XC++Tools.",
+        "C++",
+    ) is False
+
+def test_analyse_job_match_returns_structured_result() -> None:
+    job_description = "Python SQL Git Docker"
+    resume = "Python SQL Git"
+    known_skills = [
+        "Python",
+        "SQL",
+        "Git",
+        "Docker",
+    ]
+
+    result = analyse_job_match(
+        job_description,
+        resume,
+        known_skills,
+    )
+
+    assert result.matched_skills == [
+        "Python",
+        "SQL",
+        "Git",
+    ]
+    assert result.missing_skills == ["Docker"]
+    assert result.match_score == 75.0

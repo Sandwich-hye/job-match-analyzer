@@ -1,8 +1,7 @@
 from pathlib import Path
 
-from app.analyzer import find_matching_skills
+from app.analyzer import analyse_job_match
 from app.loaders import load_text_file
-from app.analyzer import calculate_match_score, find_matching_skills
 
 def print_banner() -> None:
     print("=" * 50)
@@ -46,30 +45,35 @@ def main() -> None:
         "AWS",
     ]
 
-    matched_skills, missing_skills = find_matching_skills(
+    result = analyse_job_match(
         job_description,
         resume,
         known_skills,
     )
-    match_score = calculate_match_score(
-        matched_skills,
-        missing_skills,
-    )
-    
-    print(f"\nMatch score: {match_score}%")
+
+    print(f"\nMatch score: {result.match_score}%")
     print("\nMatching skills:")
-    if matched_skills:
-        for skill in matched_skills:
+    if result.matched_skills:
+        for skill in result.matched_skills:
             print(f"- {skill}")
     else:
         print("- None")
 
     print("\nMissing skills:")
-    if missing_skills:
-        for skill in missing_skills:
+    if result.missing_skills:
+        for skill in result.missing_skills:
             print(f"- {skill}")
     else:
         print("- None")
+    
+    output_path = Path("analysis_result.json")
+
+    output_path.write_text(
+        result.model_dump_json(indent=2),
+        encoding="utf-8",
+    )
+
+    print(f"\nAnalysis saved to: {output_path.resolve()}")
 
 
 if __name__ == "__main__":
