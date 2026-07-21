@@ -1,9 +1,11 @@
 from app.analyzer import (
     analyse_job_match,
+    build_requirement_matches,
     calculate_match_score,
     contains_skill,
     find_matching_skills,
 )
+from app.models import MatchStatus
 
 def test_find_matching_skills_returns_matched_and_missing_skills() -> None:
     job_description = """
@@ -228,3 +230,52 @@ def test_analyse_job_match_returns_structured_result() -> None:
     ]
     assert result.missing_skills == ["Docker"]
     assert result.match_score == 75.0
+
+
+def test_build_requirement_matches_returns_status_for_each_required_skill(
+) -> None:
+    job_description = "Python and Docker are required."
+    resume = "Experienced Python developer."
+    known_skills = (
+        "Python",
+        "Docker",
+        "React",
+    )
+
+    result = build_requirement_matches(
+        job_description,
+        resume,
+        known_skills,
+    )
+
+    assert len(result) == 2
+
+    assert result[0].requirement == "Python"
+    assert result[0].status == MatchStatus.MATCHED
+    assert result[0].candidate_evidence == "Python"
+
+    assert result[1].requirement == "Docker"
+    assert result[1].status == MatchStatus.NOT_ENOUGH_INFORMATION
+    assert result[1].candidate_evidence is None
+
+
+def test_build_requirement_matches_ignores_skills_not_required_by_job(
+) -> None:
+    job_description = "Python is required."
+    resume = "Experienced with Python and React."
+    known_skills = (
+        "Python",
+        "Docker",
+        "React",
+    )
+
+    result = build_requirement_matches(
+        job_description,
+        resume,
+        known_skills,
+    )
+
+    assert [
+        requirement_match.requirement
+        for requirement_match in result
+    ] == ["Python"]

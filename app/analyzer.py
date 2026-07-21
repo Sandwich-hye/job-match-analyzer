@@ -1,7 +1,7 @@
 import re
 
-from app.models import MatchResult
 from collections.abc import Sequence
+from app.models import MatchResult, MatchStatus, RequirementMatch
 
 def contains_skill(text: str, skill: str) -> bool:
     escaped_skill = re.escape(skill)
@@ -76,3 +76,34 @@ def analyse_job_match(
         missing_skills=missing_skills,
         match_score=match_score,
     )
+
+def build_requirement_matches(
+    job_description: str,
+    resume: str,
+    skills: Sequence[str],
+) -> list[RequirementMatch]:
+    requirement_matches: list[RequirementMatch] = []
+
+    for skill in skills:
+        if not contains_skill(job_description, skill):
+            continue
+
+        has_resume_evidence = contains_skill(resume, skill)
+
+        requirement_matches.append(
+            RequirementMatch(
+                requirement=skill,
+                status=(
+                    MatchStatus.MATCHED
+                    if has_resume_evidence
+                    else MatchStatus.NOT_ENOUGH_INFORMATION
+                ),
+                candidate_evidence=(
+                    skill
+                    if has_resume_evidence
+                    else None
+                ),
+            )
+        )
+
+    return requirement_matches
