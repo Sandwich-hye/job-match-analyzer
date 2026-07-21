@@ -4,6 +4,7 @@ from pathlib import Path
 from app.skills import KNOWN_SKILLS
 from app.analyzer import analyse_job_match
 from app.loaders import load_text_file
+from collections.abc import Sequence
 
 BASE_DIR = Path(__file__).resolve().parent
 
@@ -15,7 +16,9 @@ DEFAULT_RESUME_PATH = (
     BASE_DIR / "data" / "resume" / "sample_resume.txt"
 )
 
-def parse_arguments() -> argparse.Namespace:
+def parse_arguments(
+    args: Sequence[str] | None = None,
+) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
             "Compare a job description with a resume "
@@ -37,8 +40,8 @@ def parse_arguments() -> argparse.Namespace:
         help="Path to the resume text file.",
     )
 
-    return parser.parse_args()
-
+    return parser.parse_args(args)
+    
 def print_banner() -> None:
     print("=" * 50)
     print("Job Match Analyzer")
