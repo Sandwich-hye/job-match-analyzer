@@ -68,3 +68,12 @@ def test_requirement_match_rejects_invalid_status() -> None:
             requirement="Python",
             status="complete_match",
         )
+
+def test_match_result_defaults_requirement_matches_to_empty_list() -> None:
+    result = MatchResult(
+        matched_skills=["Python"],
+        missing_skills=["Docker"],
+        match_score=50.0,
+    )
+
+    assert result.requirement_matches == []

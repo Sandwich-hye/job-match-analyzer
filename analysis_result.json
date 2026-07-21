@@ -7,5 +7,31 @@
   "missing_skills": [
     "Docker"
   ],
-  "match_score": 75.0
+  "match_score": 75.0,
+  "requirement_matches": [
+    {
+      "requirement": "Python",
+      "status": "matched",
+      "candidate_evidence": "Python",
+      "is_application_blocker": false
+    },
+    {
+      "requirement": "SQL",
+      "status": "matched",
+      "candidate_evidence": "SQL",
+      "is_application_blocker": false
+    },
+    {
+      "requirement": "Git",
+      "status": "matched",
+      "candidate_evidence": "Git",
+      "is_application_blocker": false
+    },
+    {
+      "requirement": "Docker",
+      "status": "not_enough_information",
+      "candidate_evidence": null,
+      "is_application_blocker": false
+    }
+  ]
 }

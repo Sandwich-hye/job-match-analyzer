@@ -66,6 +66,12 @@ def analyse_job_match(
         skills,
     )
 
+    requirement_matches = build_requirement_matches(
+        job_description,
+        resume,
+        skills,
+    )
+
     match_score = calculate_match_score(
         matched_skills,
         missing_skills,
@@ -75,6 +81,7 @@ def analyse_job_match(
         matched_skills=matched_skills,
         missing_skills=missing_skills,
         match_score=match_score,
+        requirement_matches=requirement_matches,
     )
 
 def build_requirement_matches(

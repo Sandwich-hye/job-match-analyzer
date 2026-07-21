@@ -231,6 +231,26 @@ def test_analyse_job_match_returns_structured_result() -> None:
     assert result.missing_skills == ["Docker"]
     assert result.match_score == 75.0
 
+    assert [
+        item.requirement
+        for item in result.requirement_matches
+    ] == [
+        "Python",
+        "SQL",
+        "Git",
+        "Docker",
+    ]
+
+    assert [
+        item.status
+        for item in result.requirement_matches
+    ] == [
+        MatchStatus.MATCHED,
+        MatchStatus.MATCHED,
+        MatchStatus.MATCHED,
+        MatchStatus.NOT_ENOUGH_INFORMATION,
+    ]
+
 
 def test_build_requirement_matches_returns_status_for_each_required_skill(
 ) -> None:
