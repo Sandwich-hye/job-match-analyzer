@@ -1,14 +1,10 @@
-from app.skills import (
-    KNOWN_REQUIREMENTS,
-    KNOWN_SKILLS,
-)
+from app.skills import KNOWN_REQUIREMENTS
 from app.analyzer import (
     analyse_job_match,
     build_requirement_matches,
     contains_skill,
     extract_requirement_evidence,
     extract_skill_evidence,
-    find_matching_skills,
 )
 from app.models import (
     MatchStatus,
@@ -25,15 +21,6 @@ def create_requirement_definition(
         category=RequirementCategory.CORE_SKILL,
         aliases=aliases,
     )
-
-def test_known_skills_are_derived_from_requirement_catalog() -> None:
-    expected_skills = tuple(
-        requirement.name
-        for requirement in KNOWN_REQUIREMENTS
-    )
-
-    assert KNOWN_SKILLS == expected_skills
-
 
 def test_requirement_catalog_has_unique_names() -> None:
     normalized_names = [

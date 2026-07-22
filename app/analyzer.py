@@ -24,32 +24,6 @@ def contains_skill(text: str, skill: str) -> bool:
         flags=re.IGNORECASE,
     ) is not None
 
-def find_matching_skills(
-    job_description: str,
-    resume: str,
-    skills: Sequence[str]
-) -> tuple[list[str], list[str]]:
-    required_skills = [
-        skill
-        for skill in skills
-        if contains_skill(job_description, skill)
-    ]
-
-    matched_skills = [
-        skill
-        for skill in required_skills
-        if contains_skill(resume, skill)
-    ]
-
-    missing_skills = [
-        skill
-        for skill in required_skills
-        if not contains_skill(resume, skill)
-    ]
-
-    return matched_skills, missing_skills
-
-
 def analyse_job_match(
     job_description: str,
     resume: str,

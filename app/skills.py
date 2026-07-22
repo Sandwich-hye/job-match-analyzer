@@ -55,9 +55,3 @@ KNOWN_REQUIREMENTS: tuple[RequirementDefinition, ...] = (
         aliases=("Amazon Web Services",),
     ),
 )
-
-
-KNOWN_SKILLS: tuple[str, ...] = tuple(
-    requirement.name
-    for requirement in KNOWN_REQUIREMENTS
-)
