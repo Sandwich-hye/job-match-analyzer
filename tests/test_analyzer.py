@@ -14,12 +14,18 @@ from app.skills import RequirementDefinition
 
 def create_requirement_definition(
     name: str,
+    *,
     aliases: tuple[str, ...] = (),
+    category: RequirementCategory = (
+        RequirementCategory.CORE_SKILL
+    ),
+    is_application_blocker: bool = False,
 ) -> RequirementDefinition:
     return RequirementDefinition(
         name=name,
-        category=RequirementCategory.CORE_SKILL,
+        category=category,
         aliases=aliases,
+        is_application_blocker=is_application_blocker,
     )
 
 def test_contains_skill_matches_complete_skill_name() -> None:
@@ -281,3 +287,64 @@ def test_analyse_job_match_normalizes_requirement_aliases() -> None:
     assert requirement_match.candidate_evidence == (
         "Built and deployed applications using AWS."
     )
+
+def test_analyse_job_match_surfaces_unmet_application_blocker(
+) -> None:
+    job_description = """
+    Requirements:
+    - New Zealand citizenship
+    - Python
+    """
+
+    resume = """
+    Skills:
+    - Python
+    """
+
+    requirements = (
+        create_requirement_definition(
+            "New Zealand citizenship",
+            category=RequirementCategory.FEASIBILITY,
+            is_application_blocker=True,
+        ),
+        create_requirement_definition("Python"),
+    )
+
+    result = analyse_job_match(
+        job_description,
+        resume,
+        requirements,
+    )
+
+    assert result.potential_application_blockers == [
+        "New Zealand citizenship",
+    ]
+
+
+def test_analyse_job_match_does_not_surface_matched_blocker(
+) -> None:
+    job_description = """
+    Requirements:
+    - New Zealand citizenship
+    """
+
+    resume = """
+    Eligibility:
+    - New Zealand citizenship
+    """
+
+    requirements = (
+        create_requirement_definition(
+            "New Zealand citizenship",
+            category=RequirementCategory.FEASIBILITY,
+            is_application_blocker=True,
+        ),
+    )
+
+    result = analyse_job_match(
+        job_description,
+        resume,
+        requirements,
+    )
+
+    assert result.potential_application_blockers == []

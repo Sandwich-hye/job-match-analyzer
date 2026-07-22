@@ -38,3 +38,6 @@ class MatchResult(BaseModel):
     requirement_matches: list[RequirementMatch] = Field(
         default_factory=list,
     )
+    potential_application_blockers: list[str] = Field(
+        default_factory=list,
+    )

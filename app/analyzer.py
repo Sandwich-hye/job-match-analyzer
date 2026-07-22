@@ -62,12 +62,21 @@ def analyse_job_match(
         category_scores,
     )
 
+    potential_application_blockers = (
+        find_potential_application_blockers(
+            requirement_matches,
+        )
+    )
+
     return MatchResult(
         matched_skills=matched_skills,
         missing_skills=missing_skills,
         requirement_score=requirement_score,
         match_score=match_score,
         category_scores=category_scores,
+        potential_application_blockers=(
+            potential_application_blockers
+        ),
         requirement_matches=requirement_matches,
     )
 
@@ -110,6 +119,25 @@ def build_requirement_matches(
         )
 
     return requirement_matches
+
+
+def find_potential_application_blockers(
+    requirement_matches: Sequence[RequirementMatch],
+) -> list[str]:
+    blocking_statuses = {
+        MatchStatus.PARTIALLY_MATCHED,
+        MatchStatus.NOT_MATCHED,
+        MatchStatus.NOT_ENOUGH_INFORMATION,
+    }
+
+    return [
+        item.requirement
+        for item in requirement_matches
+        if (
+            item.is_application_blocker
+            and item.status in blocking_statuses
+        )
+    ]
 
 def extract_skill_evidence(
     text: str,

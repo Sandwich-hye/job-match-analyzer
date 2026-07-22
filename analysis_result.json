@@ -54,5 +54,6 @@
       "candidate_evidence": "- AWS",
       "is_application_blocker": false
     }
-  ]
+  ],
+  "potential_application_blockers": []
 }

@@ -91,6 +91,14 @@ def main() -> None:
             print(f"- {skill}")
     else:
         print("- None")
+
+    print("\nPotential application blockers:")
+
+    if result.potential_application_blockers:
+        for blocker in result.potential_application_blockers:
+            print(f"- {blocker}")
+    else:
+        print("- None")
     
     output_path = Path("analysis_result.json")
 
