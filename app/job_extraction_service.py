@@ -18,6 +18,9 @@ def extract_job_information(
     raw_output = client.generate(
         system_prompt=JOB_EXTRACTION_SYSTEM_PROMPT,
         user_prompt=user_prompt,
+        response_schema=(
+            JobExtraction.model_json_schema()
+        ),
     )
 
     return parse_job_extraction(raw_output)

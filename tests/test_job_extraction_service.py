@@ -21,15 +21,22 @@ class FakeLLMClient:
         self.response = response
         self.system_prompt: str | None = None
         self.user_prompt: str | None = None
+        self.response_schema: (
+            dict[str, object] | None
+        ) = None
 
     def generate(
         self,
         *,
         system_prompt: str,
         user_prompt: str,
+        response_schema: (
+            dict[str, object] | None
+        ) = None,
     ) -> str:
         self.system_prompt = system_prompt
         self.user_prompt = user_prompt
+        self.response_schema = response_schema
 
         return self.response
 
@@ -93,6 +100,15 @@ def test_extract_job_information_sends_prompts_to_client(
     assert job_description in client.user_prompt
 
     assert '"requirements"' in client.user_prompt
+
+    assert client.response_schema is not None
+    assert "properties" in client.response_schema
+    assert "job_title" in (
+        client.response_schema["properties"]
+    )
+    assert "requirements" in (
+        client.response_schema["properties"]
+    )
 
 
 def test_extract_job_information_rejects_invalid_llm_output(
