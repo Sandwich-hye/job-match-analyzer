@@ -47,6 +47,21 @@ class ExtractedRequirement(BaseModel):
             )
 
         return stripped_value
+    @model_validator(mode="after")
+    def validate_application_blocker(
+        self,
+    ) -> Self:
+        if (
+            self.is_application_blocker
+            and self.category
+            != RequirementCategory.FEASIBILITY
+        ):
+            raise ValueError(
+                "application blockers must use "
+                "the feasibility category"
+            )
+
+        return self
 
 
 class JobExtraction(BaseModel):

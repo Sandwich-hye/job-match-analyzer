@@ -79,3 +79,69 @@ def test_build_prompt_rejects_empty_job_description(
         match="job description must not be empty",
     ):
         build_job_extraction_prompt("   ")
+
+def test_system_prompt_distinguishes_required_skills_from_blockers(
+) -> None:
+    normalized_prompt = " ".join(
+        JOB_EXTRACTION_SYSTEM_PROMPT.split()
+    )
+
+    assert (
+        "is not automatically an application blocker"
+        in normalized_prompt
+    )
+
+    assert (
+        "explicit eligibility condition"
+        in normalized_prompt
+    )
+
+    assert (
+        'Every application blocker must use '
+        'category="feasibility"'
+        in normalized_prompt
+    )
+
+
+def test_system_prompt_requests_normalized_requirement_names(
+) -> None:
+    assert (
+        "Use concise, normalized requirement names"
+        in JOB_EXTRACTION_SYSTEM_PROMPT
+    )
+
+def test_system_prompt_defines_requirement_categories(
+) -> None:
+    normalized_prompt = " ".join(
+        JOB_EXTRACTION_SYSTEM_PROMPT.split()
+    )
+
+    assert (
+        'Use "core_skill" for programming languages, '
+        "frameworks, databases, cloud platforms"
+        in normalized_prompt
+    )
+
+    assert (
+        'Use "experience" for duration, seniority, scale, '
+        "or depth of previous work"
+        in normalized_prompt
+    )
+
+    assert (
+        'Use "responsibility" for work the employee will '
+        "be expected to perform"
+        in normalized_prompt
+    )
+
+    assert (
+        'Use "feasibility" for eligibility or practical '
+        "constraints"
+        in normalized_prompt
+    )
+
+    assert (
+        'Do not use "bonus" merely because a requirement '
+        "is preferred"
+        in normalized_prompt
+    )

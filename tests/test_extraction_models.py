@@ -90,3 +90,72 @@ def test_job_extraction_rejects_duplicate_requirements(
                 create_python_requirement("python"),
             ],
         )
+
+def test_extracted_requirement_rejects_core_skill_as_blocker(
+) -> None:
+    with pytest.raises(
+        ValidationError,
+        match=(
+            "application blockers must use "
+            "the feasibility category"
+        ),
+    ):
+        ExtractedRequirement(
+            requirement="Python",
+            category=RequirementCategory.CORE_SKILL,
+            importance=RequirementImportance.REQUIRED,
+            job_evidence="Python is required.",
+            is_application_blocker=True,
+        )
+
+
+def test_extracted_requirement_accepts_feasibility_blocker(
+) -> None:
+    result = ExtractedRequirement(
+        requirement="New Zealand work rights",
+        category=RequirementCategory.FEASIBILITY,
+        importance=RequirementImportance.REQUIRED,
+        job_evidence=(
+            "Applicants must have the legal right "
+            "to work in New Zealand."
+        ),
+        is_application_blocker=True,
+    )
+
+    assert result.is_application_blocker is True
+    assert (
+        result.category
+        == RequirementCategory.FEASIBILITY
+    )
+
+def test_extracted_requirement_accepts_preferred_core_skill(
+) -> None:
+    result = ExtractedRequirement(
+        requirement="AWS",
+        category=RequirementCategory.CORE_SKILL,
+        importance=RequirementImportance.PREFERRED,
+        job_evidence="AWS experience is preferred.",
+    )
+
+    assert result.category == (
+        RequirementCategory.CORE_SKILL
+    )
+    assert result.importance == (
+        RequirementImportance.PREFERRED
+    )
+
+
+def test_extracted_requirement_accepts_preferred_bonus(
+) -> None:
+    result = ExtractedRequirement(
+        requirement="AWS",
+        category=RequirementCategory.BONUS,
+        importance=RequirementImportance.PREFERRED,
+        job_evidence="AWS experience is preferred.",
+    )
+
+    assert result.category == RequirementCategory.BONUS
+    assert (
+        result.importance
+        == RequirementImportance.PREFERRED
+    )
