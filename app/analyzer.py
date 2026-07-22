@@ -1,5 +1,5 @@
 import re
-
+from app.skills import RequirementDefinition
 from collections.abc import Sequence
 from app.models import (
     MatchResult,
@@ -54,19 +54,28 @@ def find_matching_skills(
 def analyse_job_match(
     job_description: str,
     resume: str,
-    skills: Sequence[str],
+    requirements: Sequence[RequirementDefinition],
 ) -> MatchResult:
-    matched_skills, missing_skills = find_matching_skills(
-        job_description,
-        resume,
-        skills,
-    )
-
     requirement_matches = build_requirement_matches(
         job_description,
         resume,
-        skills,
+        requirements,
     )
+
+    matched_skills = [
+        item.requirement
+        for item in requirement_matches
+        if item.status == MatchStatus.MATCHED
+    ]
+
+    missing_skills = [
+        item.requirement
+        for item in requirement_matches
+        if item.status in {
+            MatchStatus.NOT_MATCHED,
+            MatchStatus.NOT_ENOUGH_INFORMATION,
+        }
+    ]
 
     requirement_score = calculate_requirement_score(
         requirement_matches,
@@ -92,28 +101,28 @@ def analyse_job_match(
 def build_requirement_matches(
     job_description: str,
     resume: str,
-    skills: Sequence[str],
+    requirements: Sequence[RequirementDefinition],
 ) -> list[RequirementMatch]:
     requirement_matches: list[RequirementMatch] = []
 
-    for skill in skills:
-        job_evidence = extract_skill_evidence(
+    for requirement in requirements:
+        job_evidence = extract_requirement_evidence(
             job_description,
-            skill,
+            requirement,
         )
 
         if job_evidence is None:
             continue
 
-        candidate_evidence = extract_skill_evidence(
+        candidate_evidence = extract_requirement_evidence(
             resume,
-            skill,
+            requirement,
         )
 
         requirement_matches.append(
             RequirementMatch(
-                requirement=skill,
-                category=RequirementCategory.CORE_SKILL,
+                requirement=requirement.name,
+                category=requirement.category,
                 status=(
                     MatchStatus.MATCHED
                     if candidate_evidence is not None
@@ -121,6 +130,9 @@ def build_requirement_matches(
                 ),
                 job_evidence=job_evidence,
                 candidate_evidence=candidate_evidence,
+                is_application_blocker=(
+                    requirement.is_application_blocker
+                ),
             )
         )
 
@@ -135,5 +147,25 @@ def extract_skill_evidence(
 
         if line and contains_skill(line, skill):
             return line
+
+    return None
+
+def extract_requirement_evidence(
+    text: str,
+    requirement: RequirementDefinition,
+) -> str | None:
+    search_terms = (
+        requirement.name,
+        *requirement.aliases,
+    )
+
+    for search_term in search_terms:
+        evidence = extract_skill_evidence(
+            text,
+            search_term,
+        )
+
+        if evidence is not None:
+            return evidence
 
     return None

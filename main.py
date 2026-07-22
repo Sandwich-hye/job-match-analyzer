@@ -1,7 +1,7 @@
 import argparse
 
 from pathlib import Path
-from app.skills import KNOWN_SKILLS
+from app.skills import KNOWN_REQUIREMENTS
 from app.analyzer import analyse_job_match
 from app.loaders import load_text_file
 from collections.abc import Sequence
@@ -73,7 +73,7 @@ def main() -> None:
     result = analyse_job_match(
         job_description,
         resume,
-        KNOWN_SKILLS,
+        KNOWN_REQUIREMENTS,
     )
 
     print(f"\nOverall match score: {result.match_score}%")
