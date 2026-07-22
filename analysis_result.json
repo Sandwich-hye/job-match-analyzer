@@ -10,6 +10,7 @@
   ],
   "requirement_score": 80.0,
   "match_score": 80.0,
+  "recommendation": "apply",
   "category_scores": {
     "core_skill": 80.0
   },

@@ -1,6 +1,6 @@
 import re
 from collections.abc import Sequence
-
+from app.recommendation import determine_recommendation
 from app.models import (
     MatchResult,
     MatchStatus,
@@ -50,6 +50,12 @@ def analyse_job_match(
         }
     ]
 
+    potential_application_blockers = (
+        find_potential_application_blockers(
+            requirement_matches,
+        )
+    )
+
     requirement_score = calculate_requirement_score(
         requirement_matches,
     )
@@ -62,10 +68,9 @@ def analyse_job_match(
         category_scores,
     )
 
-    potential_application_blockers = (
-        find_potential_application_blockers(
-            requirement_matches,
-        )
+    recommendation = determine_recommendation(
+        match_score,
+        potential_application_blockers,
     )
 
     return MatchResult(
@@ -73,6 +78,7 @@ def analyse_job_match(
         missing_skills=missing_skills,
         requirement_score=requirement_score,
         match_score=match_score,
+        recommendation=recommendation,
         category_scores=category_scores,
         potential_application_blockers=(
             potential_application_blockers

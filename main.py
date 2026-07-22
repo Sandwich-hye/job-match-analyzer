@@ -78,6 +78,7 @@ def main() -> None:
 
     print(f"\nOverall match score: {result.match_score}%")
     print(f"Requirement score: {result.requirement_score}%")
+    print(f"Recommendation: {result.recommendation.value}")
     print("\nMatching skills:")
     if result.matched_skills:
         for skill in result.matched_skills:

@@ -9,6 +9,10 @@ class MatchStatus(StrEnum):
     NOT_MATCHED = "not_matched"
     NOT_ENOUGH_INFORMATION = "not_enough_information"
 
+class Recommendation(StrEnum):
+    APPLY = "apply"
+    CONSIDER = "consider"
+    SKIP = "skip"
 
 class RequirementCategory(StrEnum):
     CORE_SKILL = "core_skill"
@@ -32,6 +36,7 @@ class MatchResult(BaseModel):
     missing_skills: list[str]
     requirement_score: float = Field(ge=0, le=100)
     match_score: float = Field(ge=0, le=100)
+    recommendation: Recommendation
     category_scores: dict[RequirementCategory, float] = Field(
         default_factory=dict,
     )
