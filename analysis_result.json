@@ -7,6 +7,7 @@
   "missing_skills": [
     "Docker"
   ],
+  "requirement_score": 75.0,
   "match_score": 75.0,
   "category_scores": {
     "core_skill": 75.0

@@ -13,11 +13,13 @@ def test_match_result_accepts_valid_data() -> None:
     result = MatchResult(
         matched_skills=["Python", "SQL"],
         missing_skills=["Docker"],
+        requirement_score=66.67,
         match_score=66.67,
     )
 
     assert result.matched_skills == ["Python", "SQL"]
     assert result.missing_skills == ["Docker"]
+    assert result.requirement_score == 66.67
     assert result.match_score == 66.67
 
 
@@ -26,6 +28,7 @@ def test_match_result_rejects_score_below_zero() -> None:
         MatchResult(
             matched_skills=[],
             missing_skills=["Python"],
+            requirement_score=0.0,
             match_score=-1,
         )
 
@@ -35,6 +38,7 @@ def test_match_result_rejects_score_above_100() -> None:
         MatchResult(
             matched_skills=["Python"],
             missing_skills=[],
+            requirement_score=100.0,
             match_score=101,
         )
 
@@ -89,6 +93,7 @@ def test_match_result_defaults_requirement_matches_to_empty_list() -> None:
     result = MatchResult(
         matched_skills=["Python"],
         missing_skills=["Docker"],
+        requirement_score=50.0,
         match_score=50.0,
     )
 
@@ -118,7 +123,17 @@ def test_match_result_defaults_category_scores_to_empty_dict() -> None:
     result = MatchResult(
         matched_skills=["Python"],
         missing_skills=["Docker"],
+        requirement_score=50.0,
         match_score=50.0,
     )
 
     assert result.category_scores == {}
+
+def test_match_result_rejects_invalid_requirement_score() -> None:
+    with pytest.raises(ValidationError):
+        MatchResult(
+            matched_skills=[],
+            missing_skills=["Python"],
+            requirement_score=120.0,
+            match_score=0.0,
+        )

@@ -41,7 +41,7 @@ def parse_arguments(
     )
 
     return parser.parse_args(args)
-    
+
 def print_banner() -> None:
     print("=" * 50)
     print("Job Match Analyzer")
@@ -76,7 +76,8 @@ def main() -> None:
         KNOWN_SKILLS,
     )
 
-    print(f"\nMatch score: {result.match_score}%")
+    print(f"\nOverall match score: {result.match_score}%")
+    print(f"Requirement score: {result.requirement_score}%")
     print("\nMatching skills:")
     if result.matched_skills:
         for skill in result.matched_skills:

@@ -11,6 +11,7 @@ from app.models import (
 from app.scoring import (
     calculate_category_scores,
     calculate_requirement_score,
+    calculate_weighted_score,
 )
 
 def contains_skill(text: str, skill: str) -> bool:
@@ -67,7 +68,7 @@ def analyse_job_match(
         skills,
     )
 
-    match_score = calculate_requirement_score(
+    requirement_score = calculate_requirement_score(
         requirement_matches,
     )
 
@@ -75,9 +76,14 @@ def analyse_job_match(
         requirement_matches,
     )
 
+    match_score = calculate_weighted_score(
+        category_scores,
+    )
+
     return MatchResult(
         matched_skills=matched_skills,
         missing_skills=missing_skills,
+        requirement_score=requirement_score,
         match_score=match_score,
         category_scores=category_scores,
         requirement_matches=requirement_matches,

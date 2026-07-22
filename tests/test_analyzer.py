@@ -213,6 +213,9 @@ def test_analyse_job_match_returns_structured_result() -> None:
         RequirementCategory.CORE_SKILL: 75.0,
     }
 
+    assert result.requirement_score == 75.0
+    assert result.match_score == 75.0
+
 
 def test_build_requirement_matches_returns_status_for_each_required_skill(
 ) -> None:
