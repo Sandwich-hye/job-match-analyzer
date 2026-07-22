@@ -5,7 +5,10 @@ from app.analyzer import (
     extract_skill_evidence,
     find_matching_skills,
 )
-from app.models import MatchStatus
+from app.models import (
+    MatchStatus,
+    RequirementCategory,
+)
 
 def test_find_matching_skills_returns_matched_and_missing_skills() -> None:
     job_description = """
@@ -205,6 +208,10 @@ def test_analyse_job_match_returns_structured_result() -> None:
         MatchStatus.MATCHED,
         MatchStatus.NOT_ENOUGH_INFORMATION,
     ]
+
+    assert result.category_scores == {
+        RequirementCategory.CORE_SKILL: 75.0,
+    }
 
 
 def test_build_requirement_matches_returns_status_for_each_required_skill(

@@ -31,6 +31,9 @@ class MatchResult(BaseModel):
     matched_skills: list[str]
     missing_skills: list[str]
     match_score: float = Field(ge=0, le=100)
+    category_scores: dict[RequirementCategory, float] = Field(
+        default_factory=dict,
+    )
     requirement_matches: list[RequirementMatch] = Field(
         default_factory=list,
     )

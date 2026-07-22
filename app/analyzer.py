@@ -7,7 +7,11 @@ from app.models import (
     RequirementCategory,
     RequirementMatch,
 )
-from app.scoring import calculate_requirement_score
+
+from app.scoring import (
+    calculate_category_scores,
+    calculate_requirement_score,
+)
 
 def contains_skill(text: str, skill: str) -> bool:
     escaped_skill = re.escape(skill)
@@ -67,10 +71,15 @@ def analyse_job_match(
         requirement_matches,
     )
 
+    category_scores = calculate_category_scores(
+        requirement_matches,
+    )
+
     return MatchResult(
         matched_skills=matched_skills,
         missing_skills=missing_skills,
         match_score=match_score,
+        category_scores=category_scores,
         requirement_matches=requirement_matches,
     )
 

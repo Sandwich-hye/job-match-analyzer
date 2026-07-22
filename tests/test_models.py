@@ -113,3 +113,12 @@ def test_requirement_match_rejects_invalid_category() -> None:
             status=MatchStatus.MATCHED,
             job_evidence="- Python",
         )
+
+def test_match_result_defaults_category_scores_to_empty_dict() -> None:
+    result = MatchResult(
+        matched_skills=["Python"],
+        missing_skills=["Docker"],
+        match_score=50.0,
+    )
+
+    assert result.category_scores == {}
