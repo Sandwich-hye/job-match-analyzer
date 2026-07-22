@@ -1,3 +1,5 @@
+import pytest
+
 from app.models import (
     MatchStatus,
     RequirementCategory,
@@ -6,6 +8,7 @@ from app.models import (
 from app.scoring import (
     calculate_category_scores,
     calculate_requirement_score,
+    calculate_weighted_score,
 )
 
 def create_requirement_match(
@@ -145,3 +148,44 @@ def test_calculate_category_scores_returns_zero_when_category_has_no_match(
     assert result == {
         RequirementCategory.FEASIBILITY: 0.0,
     }
+
+def test_calculate_weighted_score_uses_all_category_weights() -> None:
+    category_scores = {
+        RequirementCategory.CORE_SKILL: 80.0,
+        RequirementCategory.EXPERIENCE: 60.0,
+        RequirementCategory.RESPONSIBILITY: 50.0,
+        RequirementCategory.BONUS: 100.0,
+        RequirementCategory.FEASIBILITY: 0.0,
+    }
+
+    result = calculate_weighted_score(category_scores)
+
+    assert result == 63.0
+
+
+def test_calculate_weighted_score_normalizes_present_categories() -> None:
+    category_scores = {
+        RequirementCategory.CORE_SKILL: 75.0,
+    }
+
+    result = calculate_weighted_score(category_scores)
+
+    assert result == 75.0
+
+
+def test_calculate_weighted_score_returns_zero_for_empty_input() -> None:
+    result = calculate_weighted_score({})
+
+    assert result == 0.0
+
+
+def test_calculate_weighted_score_rejects_invalid_category_score() -> None:
+    category_scores = {
+        RequirementCategory.CORE_SKILL: 120.0,
+    }
+
+    with pytest.raises(
+        ValueError,
+        match="Category score must be between 0 and 100",
+    ):
+        calculate_weighted_score(category_scores)

@@ -1,4 +1,4 @@
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 
 from app.models import (
     MatchStatus,
@@ -11,6 +11,14 @@ STATUS_SCORES: dict[MatchStatus, float] = {
     MatchStatus.PARTIALLY_MATCHED: 0.5,
     MatchStatus.NOT_MATCHED: 0.0,
     MatchStatus.NOT_ENOUGH_INFORMATION: 0.0,
+}
+
+CATEGORY_WEIGHTS: dict[RequirementCategory, float] = {
+    RequirementCategory.CORE_SKILL: 0.35,
+    RequirementCategory.EXPERIENCE: 0.25,
+    RequirementCategory.RESPONSIBILITY: 0.20,
+    RequirementCategory.BONUS: 0.10,
+    RequirementCategory.FEASIBILITY: 0.10,
 }
 
 
@@ -53,3 +61,47 @@ def calculate_category_scores(
         )
         for category, scores in scores_by_category.items()
     }
+
+def calculate_weighted_score(
+    category_scores: Mapping[RequirementCategory, float],
+    category_weights: Mapping[RequirementCategory, float] | None = None,
+) -> float:
+    if not category_scores:
+        return 0.0
+
+    weights = (
+        CATEGORY_WEIGHTS
+        if category_weights is None
+        else category_weights
+    )
+
+    for category, score in category_scores.items():
+        if category not in weights:
+            raise ValueError(
+                f"Missing weight for category: {category.value}"
+            )
+
+        if not 0 <= score <= 100:
+            raise ValueError(
+                f"Category score must be between 0 and 100: "
+                f"{category.value}={score}"
+            )
+
+    active_weight_total = sum(
+        weights[category]
+        for category in category_scores
+    )
+
+    if active_weight_total <= 0:
+        raise ValueError(
+            "The total active category weight must be greater than zero."
+        )
+
+    weighted_score = sum(
+        score * weights[category]
+        for category, score in category_scores.items()
+    )
+
+    normalized_score = weighted_score / active_weight_total
+
+    return round(normalized_score, 2)
