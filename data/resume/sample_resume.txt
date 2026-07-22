@@ -9,6 +9,7 @@ Skills:
 - React
 - Git
 - SQL
+- AWS
 
 Experience:
 - Built web applications

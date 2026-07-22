@@ -2,15 +2,16 @@
   "matched_skills": [
     "Python",
     "SQL",
-    "Git"
+    "Git",
+    "AWS"
   ],
   "missing_skills": [
     "Docker"
   ],
-  "requirement_score": 75.0,
-  "match_score": 75.0,
+  "requirement_score": 80.0,
+  "match_score": 80.0,
   "category_scores": {
-    "core_skill": 75.0
+    "core_skill": 80.0
   },
   "requirement_matches": [
     {
@@ -43,6 +44,14 @@
       "status": "not_enough_information",
       "job_evidence": "- Docker",
       "candidate_evidence": null,
+      "is_application_blocker": false
+    },
+    {
+      "requirement": "AWS",
+      "category": "core_skill",
+      "status": "matched",
+      "job_evidence": "- Amazon Web Services",
+      "candidate_evidence": "- AWS",
       "is_application_blocker": false
     }
   ]

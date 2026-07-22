@@ -5,6 +5,7 @@ Responsibilities:
 - Write Python code
 - Build REST APIs
 - Work with databases
+- Amazon Web Services
 
 Requirements:
 - Python

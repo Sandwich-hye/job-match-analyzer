@@ -1,18 +1,17 @@
 import re
-from app.skills import RequirementDefinition
 from collections.abc import Sequence
+
 from app.models import (
     MatchResult,
     MatchStatus,
-    RequirementCategory,
     RequirementMatch,
 )
-
 from app.scoring import (
     calculate_category_scores,
     calculate_requirement_score,
     calculate_weighted_score,
 )
+from app.skills import RequirementDefinition
 
 def contains_skill(text: str, skill: str) -> bool:
     escaped_skill = re.escape(skill)
@@ -147,6 +146,26 @@ def extract_skill_evidence(
 
         if line and contains_skill(line, skill):
             return line
+
+    return None
+
+def extract_requirement_evidence(
+    text: str,
+    requirement: RequirementDefinition,
+) -> str | None:
+    search_terms = (
+        requirement.name,
+        *requirement.aliases,
+    )
+
+    for search_term in search_terms:
+        evidence = extract_skill_evidence(
+            text,
+            search_term,
+        )
+
+        if evidence is not None:
+            return evidence
 
     return None
 
