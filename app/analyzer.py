@@ -111,6 +111,7 @@ def build_requirement_matches(
             RequirementMatch(
                 requirement=requirement.name,
                 category=requirement.category,
+                importance=requirement.importance,
                 status=(
                     MatchStatus.MATCHED
                     if candidate_evidence is not None

@@ -1,5 +1,9 @@
 from enum import StrEnum
 from typing import Self
+from app.models import (
+    RequirementCategory,
+    RequirementImportance,
+)
 
 from pydantic import (
     BaseModel,
@@ -9,11 +13,6 @@ from pydantic import (
 )
 
 from app.models import RequirementCategory
-
-
-class RequirementImportance(StrEnum):
-    REQUIRED = "required"
-    PREFERRED = "preferred"
 
 
 class WorkMode(StrEnum):

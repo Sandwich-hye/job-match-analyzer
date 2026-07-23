@@ -1,12 +1,19 @@
 from dataclasses import dataclass
 
-from app.models import RequirementCategory
-
+from app.models import (
+    RequirementCategory,
+    RequirementImportance,
+)
 
 @dataclass(frozen=True, slots=True)
 class RequirementDefinition:
     name: str
-    category: RequirementCategory
+    category: RequirementCategory = (
+        RequirementCategory.CORE_SKILL
+    )
+    importance: RequirementImportance = (
+        RequirementImportance.REQUIRED
+    )
     aliases: tuple[str, ...] = ()
     is_application_blocker: bool = False
 

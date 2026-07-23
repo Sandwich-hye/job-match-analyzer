@@ -21,15 +21,20 @@ class RequirementCategory(StrEnum):
     BONUS = "bonus"
     FEASIBILITY = "feasibility"
 
+class RequirementImportance(StrEnum):
+    REQUIRED = "required"
+    PREFERRED = "preferred"
 
 class RequirementMatch(BaseModel):
     requirement: str
     category: RequirementCategory
+    importance: RequirementImportance = (
+        RequirementImportance.REQUIRED
+    )
     status: MatchStatus
     job_evidence: str
     candidate_evidence: str | None = None
     is_application_blocker: bool = False
-
 
 class MatchResult(BaseModel):
     matched_skills: list[str]

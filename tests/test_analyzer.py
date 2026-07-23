@@ -10,7 +10,7 @@ from app.models import (
     RequirementCategory,
 )
 from app.skills import RequirementDefinition
-
+from app.models import RequirementImportance
 
 def create_requirement_definition(
     name: str,
@@ -348,3 +348,24 @@ def test_analyse_job_match_does_not_surface_matched_blocker(
     )
 
     assert result.potential_application_blockers == []
+
+def test_build_requirement_matches_preserves_importance() -> None:
+    requirements = (
+        RequirementDefinition(
+            name="AWS",
+            category=RequirementCategory.CORE_SKILL,
+            importance=RequirementImportance.PREFERRED,
+        ),
+    )
+
+    result = build_requirement_matches(
+        job_description="AWS experience is preferred.",
+        resume="No cloud experience listed.",
+        requirements=requirements,
+    )
+
+    assert len(result) == 1
+    assert (
+        result[0].importance
+        == RequirementImportance.PREFERRED
+    )

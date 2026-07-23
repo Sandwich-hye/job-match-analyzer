@@ -1,6 +1,6 @@
 import pytest
 from pydantic import ValidationError
-
+from app.models import RequirementImportance
 from app.models import (
     MatchResult,
     MatchStatus,
@@ -170,3 +170,34 @@ def test_match_result_rejects_invalid_recommendation() -> None:
             match_score=100.0,
             recommendation="definitely_apply",
         )
+
+
+def test_requirement_match_accepts_preferred_importance(
+) -> None:
+    result = RequirementMatch(
+        requirement="AWS",
+        category=RequirementCategory.CORE_SKILL,
+        importance=RequirementImportance.PREFERRED,
+        status=MatchStatus.NOT_MATCHED,
+        job_evidence="AWS experience is preferred.",
+    )
+
+    assert (
+        result.importance
+        == RequirementImportance.PREFERRED
+    )
+
+def test_requirement_match_defaults_importance_to_required(
+) -> None:
+    result = RequirementMatch(
+        requirement="Python",
+        category=RequirementCategory.CORE_SKILL,
+        status=MatchStatus.MATCHED,
+        job_evidence="Python is required.",
+        candidate_evidence="Skills: Python",
+    )
+
+    assert (
+        result.importance
+        == RequirementImportance.REQUIRED
+    )
